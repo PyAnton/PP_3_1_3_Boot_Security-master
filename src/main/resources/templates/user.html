@@ -35,6 +35,7 @@
                 <div class="content-header">
                     <h4>About user</h4>
                 </div>
+
                 <table class="table">
                     <thead>
                       <tr>
@@ -48,12 +49,16 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Ячейка 1</td>
-                        <td>Ячейка 2</td>
-                        <td>Ячейка 3</td>
-                        <td>Ячейка 4</td>
-                        <td>Ячейка 5</td>
-                        <td>Ячейка 6</td>
+                          <td th:text="${user.getId()}"></td>
+                          <td th:text="${user.getFirstName()}"></td>
+                          <td th:text="${user.getLastName()}"></td>
+                          <td th:text="${user.getAge()}"></td>
+                          <td th:text="${user.getEmail()}"></td>
+                          <td>
+                              <ul>
+                                  <li th:each="role : ${user.getRoles()}" th:text="${role.getName()}"></li>
+                              </ul>
+                          </td>
                       </tr>
                     </tbody>
                   </table>

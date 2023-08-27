@@ -51,27 +51,26 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Ячейка 1</td>
-                        <td>Ячейка 2</td>
-                        <td>Ячейка 3</td>
-                        <td>Ячейка 4</td>
-                        <td>Ячейка 5</td>
-                        <td>Ячейка 6</td>
-                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal1">Edit</button></td>
-                        <td><button type="button" class="button-delete" data-toggle="modal" data-target="#exampleModal2">Delete</button></td>
-                      </tr>
-                      <tr>
-                        <td>Ячейка 1</td>
-                        <td>Ячейка 2</td>
-                        <td>Ячейка 3</td>
-                        <td>Ячейка 4</td>
-                        <td>Ячейка 5</td>
-                        <td>Ячейка 6</td>
-                        <td><button type="button" class="button-edit" data-toggle="modal" data-target="#exampleModal1">Edit</button></td>
-                        <td><button type="button" class="button-delete" data-toggle="modal" data-target="#exampleModal2">Delete</button></td>
-                      </tr>
-                      <!-- Добавьте дополнительные строки с ячейками по аналогии -->
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.getId()}">null</td>
+                        <td th:text="${user.getFirstName()}">---</td>
+                        <td th:text="${user.getLastName()}">---</td>
+                        <td th:text="${user.getAge()}">---</td>
+                        <td th:text="${user.getEmail()}">---</td>
+                        <td>
+                            <ul>
+                                <li th:each="role : ${user.getRoles()}" th:text="${role.getName()}"></li>
+                            </ul>
+                        </td>
+                        <td>
+                            <button type="button" class="button-edit" th:attr="data-toggle='modal', data-target='#editModal' + ${user.getId()}">Edit</button>
+                        </td>
+                        <td>
+                            <button type="button" class="button-delete" th:attr="data-toggle='modal', data-target='#deleteModal' + ${user.getId()}">Delete</button>
+                        </td>
+
+                    </tr>
+
                     </tbody>
                   </table>
           </div>
@@ -105,74 +104,75 @@
       </div>
     </div>
   </div>
+  <!-- Модальное окно редактирования для каждого пользователя -->
+  <div th:each="user : ${users}" th:id="'editModal' + ${user.getId()}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <form class="form-edit" action="#" method="post">
+                      <label for="edit_id">ID</label>
+                      <input type="text" name="edit_id" id="edit_id" th:value="${user.getId()}" readonly><br>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                      <label for="edit_first_name">First name</label>
+                      <input type="text" name="edit_first_name" id="edit_first_name" th:value="${user.getFirstName()}"><br>
+
+                      <label for="edit_last_name">Last name</label>
+                      <input type="text" name="edit_last_name" id="edit_last_name" th:value="${user.getLastName()}"><br>
+
+                      <label for="edit_age">Age</label>
+                      <input type="email" name="edit_age" id="edit_age" th:value="${user.getAge()}"><br>
+
+                      <label for="edit_email">Email</label>
+                      <input type="email" name="edit_email" id="edit_email" th:value="${user.getEmail()}"><br>
+
+                      <label for="edit_password">Password</label>
+                      <input type="email" name="edit_password" id="edit_password" th:value="${user.getPassword()}"><br>
+
+                      <label for="edit_role">Role</label>
+                      <select id="edit_role" name="edit_role">
+                          <option value="USER">USER</option>
+                          <option value="ADMIN" th:selected="${user.getRoles().contains('ROLE_ADMIN')}">ADMIN</option>
+                      </select><br>
+
+                  </form>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="button-edit" th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</button>
+              </div>
+          </div>
       </div>
-      <div class="modal-body">
-        <form class="form-edit" action="#" method="post">
-          <label for="edit_id">ID</label>
-          <input type="text" name="edit_id" id="edit_id"><br>
-
-          <label for="edit_first_name">First name</label>
-          <input type="text" name="edit_first_name" id="edit_first_name"><br>
-
-          <label for="edit_last_name">Last name</label>
-          <input type="text" name="edit_last_name" id="edit_last_name"><br>
-
-          <label for="edit_age">Age</label>
-          <input type="email" name="edit_age" id="edit_age"><br>
-
-          <label for="edit_email">Email</label>
-          <input type="email" name="edit_email" id="edit_email"><br>
-
-          <label for="edit_password">Password</label>
-          <input type="email" name="edit_password" id="edit_password"><br>
-
-          <label for="edit_role">Role</label>
-          <select id="edit_role" name="edit_role">
-              <option value="#">ADMIN</option>
-              <option value="#">USER</option>
-          </select><br>
-
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="button-edit">Edit</button>
-      </div>
-    </div>
   </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel2">Edit user</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+
+  <!-- Модальное окно удаления для каждого пользователя -->
+  <div th:each="user : ${users}" th:id="'deleteModal' + ${user.getId()}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel2">Delete user</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="modal-body">
+                  <h3>Вы действительно, хотите</h3>
+                  <h3>удалить пользователя:</h3>
+                  <h2 th:text="${user.getEmail()}"></h2>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="button-delete" th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</button>
+              </div>
+          </div>
       </div>
-      <div class="modal-body">
-        <h3>Вы действительно, хотите</h3> 
-        <h3>удалить пользователя:</h3>
-        <h2>*************@*******</h2>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="button-delete">Delete</button>
-      </div>
-    </div>
   </div>
-</div>
+
   
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
