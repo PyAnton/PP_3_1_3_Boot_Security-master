@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ public class User {
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
 
     public long getId() {
@@ -95,7 +96,11 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
-
+    public void addRole(String roleName) {
+        Role role = new Role();
+        role.setName(roleName);
+        this.roles.add(role);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

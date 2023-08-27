@@ -50,7 +50,18 @@ public class UserService implements UserDetailsService {
     private Collection<? extends GrantedAuthority> mapRoles(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
-
+    @Transactional
+    public void add(User user) {
+        userDao.add(user);
+    }
+    @Transactional
+    public boolean dell(long id) {
+        if (userDao.findUserById(id)!=null) {
+            userDao.dell(id);
+            return true;
+        }
+        return false;
+    }
     @Transactional
     public List<User> listUsersCount(int count) {
         List<User> listUsers = listUsers();

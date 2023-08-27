@@ -75,29 +75,29 @@
                   </table>
           </div>
           <div id="content-2">
-              <form class="new-user-form">
-                  <label class="new-user-label" for="input1">First name</label>
-                  <input type="text" id="input1" name="input1"><br>
+              <form class="new-user-form" th:action="@{/admin/create}" method="post">
+                  <label class="new-user-label" for="firstName">First name</label>
+                  <input type="text" id="firstName" name="firstName"><br>
                   
-                  <label for="input2">Last name</label>
-                  <input type="text" id="input2" name="input2"><br>
+                  <label for="lastName">Last name</label>
+                  <input type="text" id="lastName" name="lastName"><br>
                   
-                  <label for="input3">Age</label>
-                  <input type="text" id="input3" name="input3"><br>
+                  <label for="age">Age</label>
+                  <input type="text" id="age" name="age"><br>
                   
-                  <label for="input4">Email</label>
-                  <input type="text" id="input4" name="input4"><br>
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email"><br>
                   
-                  <label for="input5">Password</label>
-                  <input type="text" id="input5" name="input5"><br>
+                  <label for="password">Password</label>
+                  <input type="text" id="password" name="password"><br>
                   
-                  <label for="select">Role</label>
-                  <select id="select" name="select">
-                      <option value="#">ADMIN</option>
-                      <option value="#">USER</option>
+                  <label for="role">Role</label>
+                  <select id="role" name="role">
+                      <option value="ROLE_ADMIN">ADMIN</option>
+                      <option value="ROLE_USER">USER</option>
                   </select><br>
                   
-                  <button type="button" class="button-submit">Submit</button>
+                  <button class="button-submit" type="submit">Submit</button>
                   </form>
           </div>
         </div>

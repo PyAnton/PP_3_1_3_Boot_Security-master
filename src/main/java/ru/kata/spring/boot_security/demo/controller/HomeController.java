@@ -33,10 +33,15 @@ public class HomeController {
         model.addAttribute(user);
         return "user";
     }
-    @GetMapping("/admin")
-    public String getAdmin(@RequestParam(name = "count", defaultValue = "15") int count, Model model) {
-        model.addAttribute("users", userService.listUsersCount(count));
-        return "admin";
+    @GetMapping("/reg")
+    public String createRootUser() {
+        User user = new User();
+        user.setEmail("root@mail.ru");
+        user.setActive(true);
+        user.addRole("ADMIN");
+        user.setPassword("$2y$12$nEMCmsAsZw3NzQLnjhSH9eJldSaLhpxWBkrygEJZ4uXsLgVzN53G6");
+        userService.add(user);
+        return "redirect:/login";
     }
     @GetMapping("/login")
     public String getLogin() {
