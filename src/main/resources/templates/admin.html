@@ -115,37 +115,40 @@
                   </button>
               </div>
               <div class="modal-body">
-                  <form class="form-edit" action="#" method="post">
+                  <form class="form-edit" th:action="@{/admin/edit/{id}(id=${user.id})}" method="post">
                       <label for="edit_id">ID</label>
-                      <input type="text" name="edit_id" id="edit_id" th:value="${user.getId()}" readonly><br>
+                      <input type="text" name="id" id="edit_id"  th:value="${user.getId()}" readonly><br>
 
-                      <label for="edit_first_name">First name</label>
-                      <input type="text" name="edit_first_name" id="edit_first_name" th:value="${user.getFirstName()}"><br>
+                      <label for="edit_firstname">First name</label>
+                      <input type="text" name="firstName" id="edit_firstname"  th:value="${user.getFirstName()}"><br>
 
-                      <label for="edit_last_name">Last name</label>
-                      <input type="text" name="edit_last_name" id="edit_last_name" th:value="${user.getLastName()}"><br>
+                      <label for="edit_lastName">Last name</label>
+                      <input type="text" name="lastName" id="edit_lastName" th:value="${user.getLastName()}"><br>
 
                       <label for="edit_age">Age</label>
-                      <input type="email" name="edit_age" id="edit_age" th:value="${user.getAge()}"><br>
+                      <input type="text" name="age" id="edit_age"  th:value="${user.getAge()}"><br>
 
                       <label for="edit_email">Email</label>
-                      <input type="email" name="edit_email" id="edit_email" th:value="${user.getEmail()}"><br>
+                      <input type="email" name="email" id="edit_email"  th:value="${user.getEmail()}"><br>
 
                       <label for="edit_password">Password</label>
-                      <input type="email" name="edit_password" id="edit_password" th:value="${user.getPassword()}"><br>
+                      <input type="password" name="password" id="edit_password"  th:value="${user.getPassword()}"><br>
 
                       <label for="edit_role">Role</label>
-                      <select id="edit_role" name="edit_role">
-                          <option value="USER">USER</option>
-                          <option value="ADMIN" th:selected="${user.getRoles().contains('ROLE_ADMIN')}">ADMIN</option>
+                      <select id="edit_role" name="role">
+                          <option value="ROLE_USER">USER</option>
+                          <option value="ROLE_ADMIN" th:selected="${user.getRoles().contains('ROLE_ADMIN')}">ADMIN</option>
                       </select><br>
 
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                          <button type="submit" class="button-edit" >Edit</button>
+                      </div>
                   </form>
+
               </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="button-edit" th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</button>
-              </div>
+
           </div>
       </div>
   </div>
@@ -167,7 +170,9 @@
               </div>
               <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="button-delete" th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</button>
+                  <form method="post" th:action="@{/admin/delete/{id}(id=${user.getId()})}">
+                      <button type="submit" class="button-delete" >Delete</button>
+                  </form>
               </div>
           </div>
       </div>

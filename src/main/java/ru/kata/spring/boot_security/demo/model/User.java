@@ -1,9 +1,9 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.persistence.*;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.Set;
 @Table(name = "users")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column(name = "email")
     private String email;
@@ -28,7 +28,7 @@ public class User {
     private boolean active;
     @ManyToMany
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
+            joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
@@ -96,11 +96,22 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
     public void addRole(String roleName) {
-        Role role = new Role();
-        role.setName(roleName);
-        this.roles.add(role);
+        if (roleName.equals("ROLE_ADMIN")) {
+            Role role1 = new Role();
+            role1.setName(roleName);
+            Role role2 = new Role();
+            role2.setName("ROLE_USER");
+            this.roles.add(role1);
+            this.roles.add(role2);
+        } else {
+            Role role = new Role();
+            role.setName(roleName);
+            this.roles.add(role);
+        }
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -112,5 +123,23 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id, email, firstName, lastName);
+    }
+
+    public void clearRoles() {
+        this.roles.clear();
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", age='" + age + '\'' +
+                ", active=" + active +
+                ", roles=" + roles +
+                '}';
     }
 }

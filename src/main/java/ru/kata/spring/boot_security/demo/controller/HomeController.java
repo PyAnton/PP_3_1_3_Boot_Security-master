@@ -8,7 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,10 +20,12 @@ import java.security.Principal;
 @Controller
 public class HomeController {
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public HomeController(UserService userService) {
+    public HomeController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
     @GetMapping("/")
     public String getHome() {
@@ -38,7 +42,10 @@ public class HomeController {
         User user = new User();
         user.setEmail("root@mail.ru");
         user.setActive(true);
-        user.addRole("ADMIN");
+        user.addRole("ROLE_ADMIN");
+        user.setAge("30");
+        user.setFirstName("root");
+        user.setLastName("rutov");
         user.setPassword("$2y$12$nEMCmsAsZw3NzQLnjhSH9eJldSaLhpxWBkrygEJZ4uXsLgVzN53G6");
         userService.add(user);
         return "redirect:/login";

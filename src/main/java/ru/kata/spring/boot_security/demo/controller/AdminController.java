@@ -28,8 +28,8 @@ public class AdminController {
         return "redirect:/admin";
     }
     @PostMapping("/edit/{id}")
-    public String processEditForm(@PathVariable Long id, @ModelAttribute User user) {
-
+    public String processEditForm(@PathVariable Long id, @ModelAttribute User user, @RequestParam String role) {
+        userService.edit(id, user, role);
         return "redirect:/admin";
     }
     @PostMapping("/delete/{id}")
