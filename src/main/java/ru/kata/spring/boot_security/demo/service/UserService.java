@@ -1,76 +1,37 @@
 package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    //private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
+    private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public UserService(RoleRepository roleRepository, UserRepository userRepository) {
-        this.roleRepository = roleRepository;
+    public UserService(UserRepository userRepository, WebSecurityConfig webSecurityConfig, RoleService roleService) {
         this.userRepository = userRepository;
-        //this.passwordEncoder = passwordEncoder;
+        this.webSecurityConfig = webSecurityConfig;
+        this.roleService = roleService;
     }
 
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
     }
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findUserByEmail(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found.");
-        }
-        return new org.springframework.security.core.userdetails.User(
-                user.getEmail(),
-                user.getPassword(),
-                mapRoles(user.getRoles())
-        );
-    }
-
-    private Collection<? extends GrantedAuthority> mapRoles(Collection<Role> roles) {
-        return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
-    }
-
     @Transactional
     public boolean add(User user) {
         if (userRepository.findUserByEmail(user.getEmail()) == null) {
-            Set<Role> roles = new HashSet<>();
-            for (Role i : user.getRoles()) {
-                Role role = roleRepository.findRoleByName(i.getName());
-                if (role == null) {
-                    roleRepository.save(i);
-                    roles.add(i);
-                } else {
-                    roles.add(role);
-                }
-            }
-            user.clearRoles();
-            user.setRoles(roles);
+            user.setRoles(roleService.getOriginalRoles(user.getRoles()));
             user.setActive(true);
+            user.setPassword(webSecurityConfig.passwordEncoder().encode(user.getPassword()));
             userRepository.save(user);
             return true;
         }
@@ -110,9 +71,13 @@ public class UserService implements UserDetailsService {
             saveUser.setActive(user.isActive());
             saveUser.setFirstName(user.getFirstName());
             saveUser.setLastName(user.getLastName());
-//            saveUser.clearRoles();
-//            saveUser.addRole(role);
-            saveUser.setPassword(user.getPassword());
+            saveUser.clearRoles();
+            saveUser.addRole(role);
+            saveUser.setRoles(roleService.getOriginalRoles(saveUser.getRoles()));
+            if (!saveUser.getPassword().equals(user.getPassword())) {
+                saveUser.setPassword(webSecurityConfig.passwordEncoder().encode(user.getPassword()));
+
+            }
             userRepository.save(saveUser);
         });
     }

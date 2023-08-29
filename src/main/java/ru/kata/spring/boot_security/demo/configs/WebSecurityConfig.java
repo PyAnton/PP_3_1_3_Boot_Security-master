@@ -8,26 +8,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.web.SecurityFilterChain;
-import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(UserService userService, SuccessUserHandler successUserHandler) {
-        this.userService = userService;
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userDetailsService) {
         this.successUserHandler = successUserHandler;
+        this.userDetailsService = userDetailsService;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -48,18 +44,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-            User.withDefaultPasswordEncoder()
-                    .username("root@mail.ru")
-                    .password("$2y$12$YC6qd5GGGhALllzIeNleBuhS4q8qQ7l7zmm2hsu1xrmo24tlnTiTK")//root
-                    .roles("ADMIN")
-                    .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
@@ -67,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/css/**", "/js/**",
                         "/static/**");
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -76,10 +61,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider daoProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(passwordEncoder());
-        provider.setUserDetailsService(userService);
+        provider.setUserDetailsService(userDetailsService);
         return provider;
     }
-    // аутентификация inMemory
-
 
 }

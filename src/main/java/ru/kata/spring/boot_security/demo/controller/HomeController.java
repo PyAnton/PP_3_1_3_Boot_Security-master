@@ -7,10 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,23 +17,24 @@ import java.security.Principal;
 @Controller
 public class HomeController {
     private final UserService userService;
-    private final RoleService roleService;
 
     @Autowired
-    public HomeController(UserService userService, RoleService roleService) {
+    public HomeController(UserService userService) {
         this.userService = userService;
-        this.roleService = roleService;
     }
+
     @GetMapping("/")
     public String getHome() {
         return "redirect:/user";
     }
+
     @GetMapping("/user")
     public String getUser(Principal principal, Model model) {
         User user = userService.findUserByEmail(principal.getName());
         model.addAttribute(user);
         return "user";
     }
+
     @GetMapping("/reg")
     public String createRootUser() {
         User user = new User();
@@ -50,18 +48,18 @@ public class HomeController {
         userService.add(user);
         return "redirect:/login";
     }
+
     @GetMapping("/login")
     public String getLogin() {
         return "login";
     }
 
 
-    @PostMapping("/logout") // POST-запрос для фактического выхода
+    @PostMapping("/logout")
     public String customLogout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         if (authentication != null) {
             new SecurityContextLogoutHandler().logout(request, response, authentication);
         }
-        return "redirect:/login?logout"; // После выхода перенаправляет на страницу логина с сообщением
-
+        return "redirect:/login?logout";
     }
 }

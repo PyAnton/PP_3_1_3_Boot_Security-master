@@ -1,8 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.kata.spring.boot_security.demo.service.UserService;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
