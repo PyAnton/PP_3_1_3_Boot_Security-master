@@ -2,31 +2,31 @@ package ru.kata.spring.boot_security.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Service
 public class RoleService {
-    private final RoleRepository roleRepository;
+    private final RoleDao roleDao;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public RoleService(RoleDao roleDao) {
+        this.roleDao = roleDao;
     }
 
     public void addRole(Role role) {
-        roleRepository.save(role);
+        roleDao.save(role);
     }
 
     public Set<Role> getOriginalRoles(Set<Role> rolesIn) {
         Set<Role> roles = new HashSet<>();
         for (Role i : rolesIn) {
-            Role role = roleRepository.findRoleByName(i.getName());
+            Role role = roleDao.findRoleByName(i.getName());
             if (role == null) {
-                roleRepository.save(i);
+                roleDao.save(i);
                 roles.add(i);
             } else {
                 roles.add(role);

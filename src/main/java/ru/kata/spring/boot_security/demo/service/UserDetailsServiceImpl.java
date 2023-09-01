@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final UserDao userDao;
 
     @Autowired
-    public UserDetailsServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserDetailsServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return userDao.findUserByEmail(email);
     }
 
     @Override

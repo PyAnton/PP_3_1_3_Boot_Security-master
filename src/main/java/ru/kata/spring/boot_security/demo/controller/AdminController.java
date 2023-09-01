@@ -27,19 +27,19 @@ public class AdminController {
     @PostMapping("/create")
     public String processAddForm(@ModelAttribute User user, @RequestParam String role) {
         user.addRole(role);
-        userService.add(user);
+        userService.createUser(user);
         return HOMEPAGE;
     }
 
     @PostMapping("/edit/{id}")
     public String processEditForm(@PathVariable Long id, @ModelAttribute User user, @RequestParam String role) {
-        userService.edit(id, user, role);
+        userService.updateUser(id, user, role);
         return HOMEPAGE;
     }
 
     @PostMapping("/delete/{id}")
     public String processDeleteForm(@PathVariable Long id) {
-        userService.dell(id);
+        userService.deleteUser(id);
         return HOMEPAGE;
     }
 

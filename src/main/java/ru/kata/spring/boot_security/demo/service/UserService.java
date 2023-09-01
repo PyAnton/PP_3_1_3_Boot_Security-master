@@ -3,46 +3,46 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
+import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private final UserDao userDao;
     private final RoleService roleService;
     private final WebSecurityConfig webSecurityConfig;
 
     @Autowired
-    public UserService(UserRepository userRepository, WebSecurityConfig webSecurityConfig, RoleService roleService) {
-        this.userRepository = userRepository;
+    public UserService(UserDao userDao, WebSecurityConfig webSecurityConfig, RoleService roleService) {
+        this.userDao = userDao;
         this.webSecurityConfig = webSecurityConfig;
         this.roleService = roleService;
     }
 
     public User findUserByEmail(String email) {
-        return userRepository.findUserByEmail(email);
+        return userDao.findUserByEmail(email);
     }
 
     @Transactional
-    public boolean add(User user) {
-        if (userRepository.findUserByEmail(user.getEmail()) == null) {
+    public boolean createUser(User user) {
+        if (userDao.findUserByEmail(user.getEmail()) == null) {
             user.setRoles(roleService.getOriginalRoles(user.getRoles()));
             user.setActive(true);
             user.setPassword(webSecurityConfig.passwordEncoder().encode(user.getPassword()));
-            userRepository.save(user);
+            userDao.createUser(user);
             return true;
         }
         return false;
     }
 
     @Transactional
-    public boolean dell(long id) {
-        User user = userRepository.findUserById(id);
+    public boolean deleteUser(long id) {
+        User user = userDao.findUserById(id);
         if (user != null) {
-            userRepository.delete(user);
+            userDao.deleteUser(id);
             return true;
         }
         return false;
@@ -50,7 +50,7 @@ public class UserService {
 
     @Transactional
     public List<User> listUsersCount(int count) {
-        List<User> listUsers = listUsers();
+        List<User> listUsers = getAllUsers();
         if (count >= 15) {
             return listUsers;
         } else {
@@ -59,13 +59,14 @@ public class UserService {
     }
 
     @Transactional
-    public List<User> listUsers() {
-        return userRepository.findAll();
+    public List<User> getAllUsers() {
+        return userDao.getAllUsers();
     }
 
     @Transactional
-    public void edit(Long id, User user, String role) {
-        userRepository.findById(id).ifPresent(saveUser -> {
+    public void updateUser(Long id, User user, String role) {
+        User saveUser = userDao.findUserById(id);
+        if (saveUser != null) {
             saveUser.setEmail(user.getEmail());
             saveUser.setAge(user.getAge());
             saveUser.setActive(user.isActive());
@@ -78,7 +79,7 @@ public class UserService {
                 saveUser.setPassword(webSecurityConfig.passwordEncoder().encode(user.getPassword()));
 
             }
-            userRepository.save(saveUser);
-        });
+            userDao.updateUser(saveUser);
+        }
     }
 }

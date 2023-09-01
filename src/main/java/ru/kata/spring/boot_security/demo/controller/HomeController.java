@@ -35,20 +35,6 @@ public class HomeController {
         return "user";
     }
 
-    @GetMapping("/reg")
-    public String createRootUser() {
-        User user = new User();
-        user.setEmail("root@mail.ru");
-        user.setActive(true);
-        user.addRole("ROLE_ADMIN");
-        user.setAge("30");
-        user.setFirstName("root");
-        user.setLastName("rutov");
-        user.setPassword("$2y$12$nEMCmsAsZw3NzQLnjhSH9eJldSaLhpxWBkrygEJZ4uXsLgVzN53G6");
-        userService.add(user);
-        return "redirect:/login";
-    }
-
     @GetMapping("/login")
     public String getLogin() {
         return "login";

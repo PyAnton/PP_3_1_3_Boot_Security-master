@@ -5,6 +5,8 @@ BEGIN
     DECLARE adminCount INT;
     DECLARE userRole INT;
     DECLARE adminRole INT;
+    DECLARE userId INT;
+    DECLARE adminId INT;
 
     -- Подсчет количества записей в таблице users для каждой роли
     SELECT COUNT(*) INTO userCount FROM users WHERE email = 'user@mail.ru';
@@ -27,14 +29,17 @@ BEGIN
 
         -- Создание пользователей
         INSERT INTO users (email, password, first_name, last_name, age, active)
-        VALUES ('user@mail.ru', 'user', 'User', 'Userov', '30', 1);
+        VALUES ('user@mail.ru', '$2a$12$c1Fuo8QZPs0DWtfn1oF77eeBZlV5sVmLQFiOblecho.vYVLUfQdBy', 'User', 'Userov', '30', 1);
+        SET userId = LAST_INSERT_ID();
 
         INSERT INTO users (email, password, first_name, last_name, age, active)
-        VALUES ('admin@mail.ru', 'admin', 'Admin', 'Adminov', '35', 1);
+        VALUES ('admin@mail.ru', '$2a$12$E1RD940wjV4m5eXT9aGne.GJMNFFB9VdihZJD4UqMo/6k.uN52baO', 'Admin', 'Adminov', '35', 1);
+        SET adminId = LAST_INSERT_ID();
 
         -- Привязка ролей к пользователям
-        INSERT INTO users_roles (users_id, role_id) VALUES (LAST_INSERT_ID(), userRole);
-        INSERT INTO users_roles (users_id, role_id) VALUES (LAST_INSERT_ID(), adminRole);
+        INSERT INTO users_roles (users_id, role_id) VALUES (userId, userRole);
+        INSERT INTO users_roles (users_id, role_id) VALUES (adminId, userRole);
+        INSERT INTO users_roles (users_id, role_id) VALUES (adminId, adminRole);
     END IF;
 END //
 DELIMITER ;
