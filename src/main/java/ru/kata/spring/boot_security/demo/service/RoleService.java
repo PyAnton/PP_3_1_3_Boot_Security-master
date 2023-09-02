@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.dao.RoleDao;
 import ru.kata.spring.boot_security.demo.model.Role;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,10 +17,11 @@ public class RoleService {
         this.roleDao = roleDao;
     }
 
+    @Transactional
     public void addRole(Role role) {
         roleDao.save(role);
     }
-
+    @Transactional
     public Set<Role> getOriginalRoles(Set<Role> rolesIn) {
         Set<Role> roles = new HashSet<>();
         for (Role i : rolesIn) {

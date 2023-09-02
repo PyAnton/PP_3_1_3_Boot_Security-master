@@ -6,7 +6,7 @@ import ru.kata.spring.boot_security.demo.configs.WebSecurityConfig;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
 import ru.kata.spring.boot_security.demo.model.User;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -21,7 +21,7 @@ public class UserService {
         this.webSecurityConfig = webSecurityConfig;
         this.roleService = roleService;
     }
-
+    @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         return userDao.findUserByEmail(email);
     }
@@ -48,7 +48,7 @@ public class UserService {
         return false;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> listUsersCount(int count) {
         List<User> listUsers = getAllUsers();
         if (count >= 15) {
@@ -58,7 +58,7 @@ public class UserService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
