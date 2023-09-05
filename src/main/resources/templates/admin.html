@@ -120,19 +120,19 @@
                       <input type="text" name="id" id="edit_id"  th:value="${user.getId()}" readonly><br>
 
                       <label for="edit_firstname">First name</label>
-                      <input type="text" name="firstName" id="edit_firstname"  th:value="${user.getFirstName()}"><br>
+                      <input type="text" name="firstName" id="edit_firstname"  th:value="${user.getFirstName()}" required><br>
 
                       <label for="edit_lastName">Last name</label>
-                      <input type="text" name="lastName" id="edit_lastName" th:value="${user.getLastName()}"><br>
+                      <input type="text" name="lastName" id="edit_lastName" th:value="${user.getLastName()}" required><br>
 
                       <label for="edit_age">Age</label>
-                      <input type="text" name="age" id="edit_age"  th:value="${user.getAge()}"><br>
+                      <input type="text" name="age" id="edit_age"  th:value="${user.getAge()}" required><br>
 
                       <label for="edit_email">Email</label>
-                      <input type="email" name="email" id="edit_email"  th:value="${user.getEmail()}"><br>
+                      <input type="email" name="email" id="edit_email"  th:value="${user.getEmail()}" required><br>
 
                       <label for="edit_password">Password</label>
-                      <input type="password" name="password" id="edit_password"  th:value="${user.getPassword()}"><br>
+                      <input type="password" name="password" id="edit_password"  th:value="${user.getPassword()}" required><br>
 
                       <label for="edit_role">Role</label>
                       <select id="edit_role" name="role">
