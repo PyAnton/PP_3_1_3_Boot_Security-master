@@ -11,9 +11,9 @@
     <div class="login-container">
         <h2>Please sign in</h2>
         <form class="form-login" th:action="@{/login}" method="post">
-            <input type="email" name="username" id="username" placeholder="Email address">
+            <input type="email" name="username" id="username" placeholder="Email address" required>
             <br>
-            <input type="password" name="password" id="password" placeholder="Password">
+            <input type="password" name="password" id="password" placeholder="Password" required>
             <br>
             <button type="submit" class="button-sign" >Войти</button>
         </form>
