@@ -32,7 +32,6 @@
           <label for="tab-btn-1">User table</label>
           <input type="radio" name="tab-btn" id="tab-btn-2" value="">
           <label for="tab-btn-2">New User</label>
-        
           <div id="content-1">
                 <div class="content-header">
                     <h4>All Users</h4>
@@ -114,6 +113,7 @@
                       <span aria-hidden="true">&times;</span>
                   </button>
               </div>
+
               <div class="modal-body">
                   <form class="form-edit" th:action="@{/admin/edit/{id}(id=${user.id})}" method="post">
                       <label for="edit_id">ID</label>
